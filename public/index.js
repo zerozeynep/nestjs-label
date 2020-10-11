@@ -28,6 +28,8 @@ $('.serial-btn').click(()=>{
         } else {
           console.log('not equal')
           labelsWithSum.push(res)
+          // TODO:: use a function that you pass table selector to it and it appends the row, 
+          // use the same function for both merge table and unueque table, that will make it easier for you to debug your code and make it more readable
           $('.merge-table').append(`
           <tr>
           <th scope="row">
@@ -40,7 +42,6 @@ $('.serial-btn').click(()=>{
           <td class='quantity'>${res.quantity}</td>
           </tr>
           `)
-
         }
       })
       $('.unique-table').append(`
