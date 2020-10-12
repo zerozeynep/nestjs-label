@@ -15,41 +15,49 @@ function appendRow(selector, res){
 `)
 }
 
-$('.serial-btn').click(()=>{
-
-  const labelInfo = {
-    serialNumber: $('.serial-input').val()
+function validateInput(input){
+  if((/^[0-9]{4}$/.test(input))){
+    return true
   }
+}
 
-  $.ajax({
-    url: '/',
-    type: 'POST',
-    data: JSON.stringify(labelInfo),
-    contentType: 'application/json; charset=utf-8',
-    dataType: 'json',
-    success: (res)=> {
-      appendRow($('.unique-table'),res)
-      let found = false
-      for(let label of labelsWithSum){
-        if(label.serialNumber == res.serialNumber){
-          found = true
-          console.log(label.serialNumber)
-          console.log('eq')
-          label.quantity += res.quantity
-          $( `.merge-table tr:contains(${label.serialNumber})`).children('.quantity').html(label.quantity)
-          break
+$('.serial-btn').click(()=>{
+  const inputVal = $('.serial-input').val()
+  if(validateInput(inputVal)){
+
+    const labelInfo = {
+      serialNumber: inputVal
+    }
+    $.ajax({
+      url: '/',
+      type: 'POST',
+      data: JSON.stringify(labelInfo),
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      success: (res)=> {
+        appendRow($('.unique-table'),res)
+        let found = false
+        for(let label of labelsWithSum){
+          if(label.serialNumber == res.serialNumber){
+            found = true
+            label.quantity += res.quantity
+            $( `.merge-table tr:contains(${label.serialNumber})`).children('.quantity').html(label.quantity)
+            break
+          }
         }
-      }
-      if(!found){
-        labelsWithSum.push(res)
-        appendRow($('.merge-table'),res)
-      }
-    },
-    error: (err)=>console.log(err)
-  });
-
+        if(!found){
+          labelsWithSum.push(res)
+          appendRow($('.merge-table'),res)
+        }
+      },
+      error: (err)=>console.log(err)
+    });
+    
+  }
+  else{
+    alert('Serial number is required and has to be a 4 digit number, please make sure you are sending the correct type')
+  }
 })
-
 
 $('body').on('click', '.delete-row', (element)=>{
   const serialToDelete = $(element.target.closest('tr')).find('.serial-number').html()
