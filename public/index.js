@@ -1,9 +1,5 @@
 
-
-let labels = [{serialNumber:'6427', quantity:5}]
 let labelsWithSum = [{serialNumber:'6427', quantity:5}]
-let serialToDelete = null
-
 
 function appendRow(selector, res){
  return selector.append(`
@@ -16,13 +12,12 @@ function appendRow(selector, res){
   </th>
   <td  class='serial-number ${res.serialNumber}'>${res.serialNumber}</td>
   <td class='quantity ${res.serialNumber}'>${res.quantity}</td>
-  </tr>
-  `)
+`)
 }
 
 $('.serial-btn').click(()=>{
 
-  let labelInfo = {
+  const labelInfo = {
     serialNumber: $('.serial-input').val()
   }
 
@@ -34,7 +29,6 @@ $('.serial-btn').click(()=>{
     dataType: 'json',
     success: (res)=> {
       appendRow($('.unique-table'),res)
-      labels.push(res)
       let found = false
       for(let label of labelsWithSum){
         if(label.serialNumber == res.serialNumber){
@@ -58,8 +52,8 @@ $('.serial-btn').click(()=>{
 
 
 $('body').on('click', '.delete-row', (element)=>{
-  serialToDelete = $(element.target.closest('tr')).find('.serial-number').html()
-  quantityToDelete = parseInt($(element.target.closest('tr')).find('.quantity').html())
+  const serialToDelete = $(element.target.closest('tr')).find('.serial-number').html()
+  const quantityToDelete = parseInt($(element.target.closest('tr')).find('.quantity').html())
 
   for (let label of labelsWithSum){
     if(serialToDelete == label.serialNumber){
@@ -67,5 +61,6 @@ $('body').on('click', '.delete-row', (element)=>{
       $( `.merge-table tr:contains(${label.serialNumber})`).children('.quantity').html(label.quantity)
     }
   }
+
   $(element.target.closest('tr')).remove()
  })
